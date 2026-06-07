@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Register</title>
+
+<style>
+
+/* ===== GLOBAL ===== */
+body {
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* ===== CARD ===== */
+.box {
+    width: 380px;
+    background: white;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.3);
+}
+
+/* ===== TITLE ===== */
+h2 {
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+/* ===== INPUTS ===== */
+input, select {
+    width: 100%;
+    margin: 8px 0;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+}
+
+/* ===== BUTTON ===== */
+button {
+    width: 100%;
+    padding: 10px;
+    margin-top: 8px;
+    background: #0f2027;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+button:hover {
+    background: #203a43;
+}
+
+/* ===== MESSAGE ===== */
+#msg {
+    text-align: center;
+    margin-top: 8px;
+    font-weight: bold;
+}
+
+/* ===== LINK ===== */
+a {
+    display: block;
+    text-align: center;
+    margin-top: 10px;
+    text-decoration: none;
+    color: #0f2027;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="box">
+
+<h2>Create Account</h2>
+
+<input id="username" placeholder="Username">
+<input id="password" type="password" placeholder="Password">
+
+<select id="role">
+<option value="USER">USER</option>
+<option value="ADMIN">ADMIN</option>
+</select>
+
+<button onclick="register()">Register</button>
+
+<p id="msg"></p>
+
+<a href="login.html">Back to Login</a>
+
+</div>
+
+<script>
+function register() {
+
+fetch("/auth/register", {
+method:"POST",
+headers:{ "Content-Type":"application/json" },
+body: JSON.stringify({
+    username: username.value,
+    password: password.value,
+    role: role.value
+})
+})
+.then(r=>r.json())
+.then(d=>{
+    msg.innerText = d.message || "Registered";
+})
+.catch(()=>{
+    msg.innerText = "Error";
+});
+
+}
+</script>
+
+</body>
+</html>

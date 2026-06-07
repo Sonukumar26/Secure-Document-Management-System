@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dashboard</title>
+
+    <style>
+        body {
+            background: #f2f2f2;
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+
+        .box {
+            width: 400px;
+            margin: 120px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.2);
+        }
+
+        h2 {
+            color: #2c3e50;
+        }
+
+        .loader {
+            margin: 20px auto;
+            border: 6px solid #f3f3f3;
+            border-top: 6px solid #2c3e50;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .info {
+            color: gray;
+            margin-top: 10px;
+            font-size: 14px;
+        }
+    </style>
+
+</head>
+
+<body>
+
+<div class="box">
+    <h2>Loading Dashboard...</h2>
+
+    <div class="loader"></div>
+
+    <p class="info">Please wait while we verify your session</p>
+</div>
+
+<script>
+fetch("/auth/me", {
+    headers: {
+        "Authorization": "Bearer " + localStorage.getItem("token")
+    }
+})
+.then(res => {
+    if (!res.ok) throw new Error();
+    return res.json();
+})
+.then(data => {
+    if (data.role === "ROLE_ADMIN") {
+        window.location.href = "/admin.html";
+    } else {
+        window.location.href = "/user.html";
+    }
+})
+.catch(() => {
+    window.location.href = "/login.html";
+});
+</script>
+
+</body>
+</html>

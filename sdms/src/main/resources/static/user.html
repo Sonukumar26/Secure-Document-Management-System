@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>User Dashboard</title>
+
+<style>
+    
+body {
+    font-family: Arial;
+    background: #f2f2f2;
+    margin: 0;
+}
+
+/* NAVBAR */
+.navbar {
+    background: #2c3e50;
+    color: white;
+    padding: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.container {
+    width: 90%;
+    margin: 20px auto;
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+button {
+    background: #2c3e50;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 5px;
+}
+
+.logout {
+    background: darkred;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th {
+    background: #2c3e50;
+    color: white;
+}
+.toast {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: #333;
+    color: white;
+    padding: 12px 18px;
+    border-radius: 6px;
+    display: none;
+    z-index: 1000;
+    box-shadow: 0 0 10px rgba(0,0,0,0.3);
+}
+</style>
+
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<div class="navbar">
+<div>
+<b>SDMS – User Portal</b>
+</div>
+
+<div>
+Logged in as:
+<b id="navUser">Loading...</b>
+<button class="logout" onclick="logout()">Logout</button>
+</div>
+</div>
+
+<!-- MAIN -->
+<div class="container">
+
+<h3>Upload Document</h3>
+<input type="file" id="file">
+<button onclick="uploadDocument()">Upload</button>
+
+<p id="uploadMsg"></p>
+
+<hr>
+
+<h3>My Documents</h3>
+
+<table border="1">
+<thead>
+<tr>
+<th>Name</th>
+<th>Version</th>
+<th>Uploaded At</th>
+<th>Action</th>
+</tr>
+</thead>
+
+<tbody id="docs"></tbody>
+</table>
+
+</div>
+
+<!-- Toast -->
+<div id="toast" class="toast"></div>
+
+
+<script src="/js/auth.js"></script>
+<script src="/js/user.js"></script>
+<script src="/js/navbar.js"></script>
+</body>
+</html>
