@@ -12,7 +12,7 @@ import org.springframework.data.domain.Pageable;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/audit")
+@RequestMapping("/api/admin")
 @PreAuthorize("hasRole('ADMIN')")
 public class AuditLogController {
 
@@ -33,17 +33,6 @@ public class AuditLogController {
     }
 
 
-
-@GetMapping("/audit")
-public Page<AuditLog> getAuditLogs(
-        @RequestParam(defaultValue = "0") int page,
-        @RequestParam(defaultValue = "5") int size) {
-
-    Pageable pageable = PageRequest.of(page, size);
-
-    return repo.findAll(pageable);
-}
-
 @GetMapping("/audit")
 public Page<AuditLog> getAuditLogs(
         @RequestParam(defaultValue = "") String search,
@@ -52,7 +41,7 @@ public Page<AuditLog> getAuditLogs(
 
     Pageable pageable = PageRequest.of(page, size);
 
-    if (search.isBlank()) {
+    if (search == null || search.isBlank()) {
         return repo.findAll(pageable);
     }
 

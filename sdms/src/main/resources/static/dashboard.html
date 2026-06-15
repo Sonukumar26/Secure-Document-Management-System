@@ -3,33 +3,49 @@
 <head>
     <title>Dashboard</title>
 
+    <meta charset="UTF-8">
+
     <style>
         body {
-            background: #f2f2f2;
+            margin: 0;
             font-family: Arial, sans-serif;
-            text-align: center;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(-45deg, #1e3a5f, #2c3e50, #3498db, #8e44ad);
+            background-size: 400% 400%;
+            animation: gradientBG 10s ease infinite;
+            color: white;
+        }
+
+        @keyframes gradientBG {
+            0% {background-position: 0% 50%;}
+            50% {background-position: 100% 50%;}
+            100% {background-position: 0% 50%;}
         }
 
         .box {
-            width: 400px;
-            margin: 120px auto;
-            background: white;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.2);
+            width: 420px;
+            background: rgba(0,0,0,0.4);
+            padding: 35px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 0 20px rgba(0,0,0,0.3);
+            backdrop-filter: blur(10px);
         }
 
         h2 {
-            color: #2c3e50;
+            margin-bottom: 10px;
         }
 
         .loader {
             margin: 20px auto;
-            border: 6px solid #f3f3f3;
-            border-top: 6px solid #2c3e50;
+            border: 5px solid rgba(255,255,255,0.2);
+            border-top: 5px solid #fff;
             border-radius: 50%;
-            width: 40px;
-            height: 40px;
+            width: 45px;
+            height: 45px;
             animation: spin 1s linear infinite;
         }
 
@@ -39,25 +55,57 @@
         }
 
         .info {
-            color: gray;
-            margin-top: 10px;
             font-size: 14px;
+            opacity: 0.8;
+        }
+
+        .status {
+            margin-top: 10px;
+            font-size: 13px;
+            color: #f1c40f;
+        }
+
+        .dot::after {
+            content: "";
+            animation: dots 1.5s infinite;
+        }
+
+        @keyframes dots {
+            0% { content: ""; }
+            33% { content: "."; }
+            66% { content: ".."; }
+            100% { content: "..."; }
         }
     </style>
-
 </head>
 
 <body>
 
 <div class="box">
-    <h2>Loading Dashboard...</h2>
+
+    <h2>Loading Dashboard<span class="dot"></span></h2>
 
     <div class="loader"></div>
 
-    <p class="info">Please wait while we verify your session</p>
+    <p class="info" id="infoText">Verifying your session...</p>
+
+    <p class="status" id="statusText">Please wait</p>
+
 </div>
 
 <script>
+let statusText = document.getElementById("statusText");
+let infoText = document.getElementById("infoText");
+
+function updateStatus(msg) {
+    statusText.innerText = msg;
+}
+
+// Step animation
+setTimeout(() => updateStatus("Checking authentication..."), 500);
+setTimeout(() => updateStatus("Fetching user role..."), 1200);
+setTimeout(() => updateStatus("Almost ready..."), 2000);
+
 fetch("/auth/me", {
     headers: {
         "Authorization": "Bearer " + localStorage.getItem("token")
@@ -65,17 +113,25 @@ fetch("/auth/me", {
 })
 .then(res => {
     if (!res.ok) throw new Error();
+    updateStatus("Success! Redirecting...");
     return res.json();
 })
 .then(data => {
-    if (data.role === "ROLE_ADMIN") {
-        window.location.href = "/admin.html";
-    } else {
-        window.location.href = "/user.html";
-    }
+
+    setTimeout(() => {
+        if (data.role === "ROLE_ADMIN") {
+            window.location.href = "/admin.html";
+        } else {
+            window.location.href = "/user.html";
+        }
+    }, 1000);
+
 })
 .catch(() => {
-    window.location.href = "/login.html";
+    updateStatus("Session expired. Redirecting to login...");
+    setTimeout(() => {
+        window.location.href = "/login.html";
+    }, 1500);
 });
 </script>
 

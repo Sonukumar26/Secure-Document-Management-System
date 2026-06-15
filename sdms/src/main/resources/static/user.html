@@ -3,53 +3,98 @@
 <head>
 <title>User Dashboard</title>
 
+<meta charset="UTF-8">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
 <style>
-    
+
 body {
-    font-family: Arial;
-    background: #f2f2f2;
     margin: 0;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(-45deg, #2c3e50, #1e3a5f, #3498db, #8e44ad);
+    background-size: 400% 400%;
+    animation: bg 10s ease infinite;
+}
+
+/* BACKGROUND ANIMATION */
+@keyframes bg {
+    0% {background-position: 0% 50%;}
+    50% {background-position: 100% 50%;}
+    100% {background-position: 0% 50%;}
 }
 
 /* NAVBAR */
 .navbar {
-    background: #2c3e50;
+    background: rgba(44, 62, 80, 0.95);
     color: white;
-    padding: 12px;
+    padding: 14px 20px;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+    backdrop-filter: blur(10px);
 }
 
 .container {
-    width: 90%;
+    width: 92%;
     margin: 20px auto;
-    background: white;
-    padding: 20px;
-    border-radius: 10px;
+    background: rgba(255,255,255,0.95);
+    padding: 22px;
+    border-radius: 12px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.15);
 }
 
+/* BUTTONS */
 button {
     background: #2c3e50;
     color: white;
     border: none;
-    padding: 8px 12px;
-    border-radius: 5px;
+    padding: 9px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: 0.2s;
+    margin: 5px;
+}
+
+button:hover {
+    transform: scale(1.05);
+    opacity: 0.9;
 }
 
 .logout {
     background: darkred;
 }
 
+/* INPUT */
+input[type="file"] {
+    margin: 10px 0;
+}
+
+/* TABLE */
 table {
     width: 100%;
     border-collapse: collapse;
+    margin-top: 10px;
+    background: white;
 }
 
 th {
     background: #2c3e50;
     color: white;
+    padding: 10px;
 }
+
+td {
+    padding: 10px;
+}
+
+tr:hover {
+    background: #f1f5f9;
+    transition: 0.2s;
+}
+
+/* TOAST */
 .toast {
     position: fixed;
     top: 20px;
@@ -62,6 +107,7 @@ th {
     z-index: 1000;
     box-shadow: 0 0 10px rgba(0,0,0,0.3);
 }
+
 </style>
 
 </head>
@@ -70,51 +116,77 @@ th {
 
 <!-- NAVBAR -->
 <div class="navbar">
-<div>
-<b>SDMS – User Portal</b>
-</div>
 
-<div>
-Logged in as:
-<b id="navUser">Loading...</b>
-<button class="logout" onclick="logout()">Logout</button>
-</div>
+    <div>
+        <i class="fa-solid fa-user"></i>
+        <b> SDMS – User Portal</b>
+    </div>
+
+    <div>
+        Logged in as:
+        <b id="navUser">Loading...</b>
+
+        <button class="logout" onclick="logout()">
+            <i class="fa-solid fa-right-from-bracket"></i> Logout
+        </button>
+    </div>
+
 </div>
 
 <!-- MAIN -->
 <div class="container">
 
-<h3>Upload Document</h3>
-<input type="file" id="file">
-<button onclick="uploadDocument()">Upload</button>
+    <h3><i class="fa-solid fa-upload"></i> Upload Document</h3>
 
-<p id="uploadMsg"></p>
+    <input type="file" id="file">
 
-<hr>
+    <button onclick="uploadDocument()">
+        <i class="fa-solid fa-cloud-arrow-up"></i> Upload
+    </button>
 
-<h3>My Documents</h3>
+    <p id="uploadMsg"></p>
 
-<table border="1">
-<thead>
-<tr>
-<th>Name</th>
-<th>Version</th>
-<th>Uploaded At</th>
-<th>Action</th>
-</tr>
-</thead>
+    <hr>
 
-<tbody id="docs"></tbody>
-</table>
+    <h3><i class="fa-solid fa-folder-open"></i> My Documents</h3>
+
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Version</th>
+                <th>Uploaded At</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+
+        <tbody id="docs"></tbody>
+    </table>
 
 </div>
 
-<!-- Toast -->
+<!-- TOAST -->
 <div id="toast" class="toast"></div>
 
-
+<!-- JS -->
 <script src="/js/auth.js"></script>
 <script src="/js/user.js"></script>
 <script src="/js/navbar.js"></script>
+
+<script>
+function showToast(message, type = "success") {
+    const toast = document.getElementById("toast");
+
+    toast.innerText = message;
+    toast.style.display = "block";
+    toast.style.background =
+        type === "error" ? "#e74c3c" : "#2ecc71";
+
+    setTimeout(() => {
+        toast.style.display = "none";
+    }, 2500);
+}
+</script>
+
 </body>
 </html>

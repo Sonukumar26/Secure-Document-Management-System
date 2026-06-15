@@ -43,16 +43,26 @@ public class SecurityConfig {
                 // ✅ PUBLIC
                 .requestMatchers(
                     "/",
+                    "register.html",
                     "/login.html",
                     "/dashboard.html",
                     "/user.html",
                     "/admin.html",
                     "/auth/login",
+                    "/auth/register",
                     "/css/**",
                     "/js/**",
                     "/images/**",
                     "/favicon.ico",
-                    "/error"
+                    "/error",
+
+                     "/swagger-ui/**",
+                    "/swagger-ui.html",
+                    "/v3/api-docs/**",
+                    "/v3/api-docs",
+                    "/webjars/**",
+
+                      "/actuator/**"
                 ).permitAll()
 
                 // 🔐 ADMIN ONLY

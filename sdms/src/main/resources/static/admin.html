@@ -1,39 +1,97 @@
 <!DOCTYPE html>
 <html>
 <head>
+ <meta charset="UTF-8">
 <title>Admin Dashboard</title>
+
+<!-- ICONS -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
 <style>
 body {
-    font-family: Arial;
+    font-family: Arial, sans-serif;
     background: #eef2f7;
     margin: 0;
 }
 
+/* NAVBAR */
 .navbar {
     background: #1e3a5f;
     color: white;
-    padding: 12px;
+    padding: 14px 20px;
     display: flex;
     justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
 }
 
+/* CONTAINER */
 .container {
     width: 95%;
     margin: 20px auto;
     background: white;
     padding: 20px;
-    border-radius: 10px;
+    border-radius: 12px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.08);
+}
+
+/* BUTTONS */
+button {
+    padding: 8px 12px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    margin: 5px;
+    transition: 0.2s ease-in-out;
+    font-size: 14px;
+}
+
+button:hover {
+    transform: scale(1.05);
+    opacity: 0.9;
 }
 
 .logout {
     background: darkred;
+    color: white;
+}
+
+.upload-btn {
+    background: #1e3a5f;
+    color: white;
+}
+
+/* INPUTS */
+input {
+    padding: 8px;
+    margin: 5px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+}
+
+/* TABLE */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
 }
 
 th {
     background: #1e3a5f;
     color: white;
+    padding: 10px;
 }
+
+td {
+    padding: 10px;
+}
+
+tr:hover {
+    background: #f1f5f9;
+    transition: 0.2s;
+}
+
+/* TOAST */
 .toast {
     position: fixed;
     top: 20px;
@@ -47,7 +105,6 @@ th {
     box-shadow: 0 0 10px rgba(0,0,0,0.3);
 }
 </style>
-
 </head>
 
 <body>
@@ -55,72 +112,110 @@ th {
 <!-- NAVBAR -->
 <div class="navbar">
 
-<div>
-<b>SDMS – Admin Portal</b>
+    <div>
+        <i class="fa-solid fa-shield-halved"></i>
+        <b> SDMS – Admin Portal</b>
+    </div>
+
+    <div>
+        <i class="fa-solid fa-user"></i>
+        Logged in as:
+        <b id="navUser">Loading...</b>
+
+        <button class="logout" onclick="logout()">
+            <i class="fa-solid fa-right-from-bracket"></i> Logout
+        </button>
+    </div>
+
 </div>
 
-<div>
-Logged in as:
-<b id="navUser">Loading...</b>
-<button class="logout" onclick="logout()">Logout</button>
-</div>
-
-</div>
-
+<!-- MAIN CONTAINER -->
 <div class="container">
 
-<h3>Upload Document</h3>
-<input type="file" id="file">
-<button onclick="uploadDocument()">Upload</button>
+    <!-- UPLOAD -->
+    <h3><i class="fa-solid fa-upload"></i> Upload Document</h3>
 
-<p id="uploadMsg"></p>
+    <input type="file" id="file">
 
-<hr>
+    <button class="upload-btn" onclick="uploadDocument()">
+        <i class="fa-solid fa-cloud-arrow-up"></i> Upload
+    </button>
 
-<h3>All Documents</h3>
+    <p id="uploadMsg"></p>
 
-<table border="1">
-<thead>
-<tr>
-<th>Name</th>
-<th>Version</th>
-<th>Owner</th>
-<th>Active</th>
-<th>Actions</th>
-</tr>
-</thead>
+    <hr>
 
-<tbody id="docs"></tbody>
-</table>
+    <!-- DOCUMENTS -->
+    <h3><i class="fa-solid fa-file"></i> All Documents</h3>
 
-<hr>
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Version</th>
+                <th>Owner</th>
+                <th>Active</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody id="docs"></tbody>
+    </table>
 
-<h3>Audit Logs</h3>
+    <hr>
 
-<input id="searchUser" placeholder="Search by username">
-<button onclick="loadAuditLogs()">Search</button>
+    <!-- AUDIT LOGS -->
+    <h3><i class="fa-solid fa-clock-rotate-left"></i> Audit Logs</h3>
 
-<table border="1">
-<thead>
-<tr>
-<th>User</th>
-<th>Action</th>
-<th>File</th>
-<th>Time</th>
-</tr>
-</thead>
-<tbody id="audit"></tbody>
-</table>
+    <input id="searchUser" placeholder="Search by username">
+    <button onclick="loadAuditLogs()">
+        <i class="fa-solid fa-magnifying-glass"></i> Search
+    </button>
 
-<button onclick="prevPage()">Prev</button>
-<button onclick="nextPage()">Next</button>
+    <table>
+        <thead>
+            <tr>
+                <th>User</th>
+                <th>Action</th>
+                <th>File</th>
+                <th>Time</th>
+            </tr>
+        </thead>
+        <tbody id="audit"></tbody>
+    </table>
+
+    <!-- PAGINATION -->
+    <button onclick="prevPage()">
+        <i class="fa-solid fa-backward"></i> Prev
+    </button>
+
+    <button onclick="nextPage()">
+        Next <i class="fa-solid fa-forward"></i>
+    </button>
 
 </div>
+
+<!-- TOAST -->
 <div id="toast" class="toast"></div>
 
+<!-- SCRIPTS -->
 <script src="/js/auth.js"></script>
 <script src="/js/admin.js"></script>
 <script src="/js/navbar.js"></script>
+
+<script>
+function showToast(message, type = "success") {
+    const toast = document.getElementById("toast");
+    toast.innerText = message;
+
+    toast.style.display = "block";
+    toast.style.background =
+        type === "error" ? "#e74c3c" : "#2ecc71";
+
+    setTimeout(() => {
+        toast.style.display = "none";
+    }, 3000);
+}
+</script>
 
 </body>
 </html>

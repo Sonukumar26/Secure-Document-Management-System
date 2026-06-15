@@ -17,8 +17,16 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 @RestController
 @RequestMapping("/auth")
+@Tag(name = "Authentication", description = "Authentication and user management APIs")
 public class AuthController {
 
     private final AuthenticationManager authenticationManager;
@@ -38,11 +46,19 @@ public class AuthController {
         this.passwordEncoder = passwordEncoder;
     }
 
-    // ================= LOGIN =================
+    private static final Logger logger =
+        LoggerFactory.getLogger(AuthController.class);
 
+    // ================= LOGIN =================
+    @Operation(
+        summary = "Authenticate user",
+        description = "Authenticates a user and returns a JWT token"
+    )
     @PostMapping("/login")
     public Map<String, String> login(
             @Valid @RequestBody LoginRequest request) {
+
+        logger.info("Login request received for username: {}", request.getUsername());
 
         Authentication authentication =
                 authenticationManager.authenticate(
@@ -52,8 +68,12 @@ public class AuthController {
                         )
                 );
 
+        logger.info("User authenticated successfully: {}", authentication.getName());
+
         String token =
                 jwtUtil.generateToken(authentication.getName());
+
+        logger.debug("JWT token generated for user: {}", authentication.getName());
 
         String role =
                 authentication.getAuthorities()
@@ -68,15 +88,20 @@ public class AuthController {
     }
 
     // ================= REGISTER =================
-
+    @Operation(
+    summary = "Register user",
+    description = "Creates a new user account"
+    )
     @PostMapping("/register")
     public String register(
             @Valid @RequestBody RegisterRequest request) {
 
+            logger.info("Register request received for username: {}", request.getUsername());
+
         if (userRepository
                 .findByUsername(request.getUsername())
                 .isPresent()) {
-
+           logger.warn("Registration failed - username already exists: {}", request.getUsername());
             throw new RuntimeException("Username already exists");
         }
 
@@ -90,24 +115,31 @@ public class AuthController {
         );
 
         // ✅ DIRECT ENUM
-        user.setRole(request.getRole());cd 
+        user.setRole(request.getRole());
 
         userRepository.save(user);
+
+        logger.info("User registered successfully: {}", request.getUsername());
 
         return "User Registered Successfully";
     }
 
 
     // ================= CURRENT USER =================
-
+    @Operation(
+    summary = "Get current user",
+    description = "Returns information about the authenticated user",
+    security = @SecurityRequirement(name = "Bearer Authentication")
+    )
     @GetMapping("/me")
     public UserInfoResponse me(Authentication auth) {
 
         if (auth == null) {
+              logger.error("Unauthorized access attempt to /me");
             throw new RuntimeException(
                 "Unauthorized - JWT not processed");
         }
-
+         logger.info("Fetching current user: {}", auth.getName());
         return new UserInfoResponse(
             auth.getName(),
             auth.getAuthorities()

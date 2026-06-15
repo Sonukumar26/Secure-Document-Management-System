@@ -3,75 +3,110 @@
 <head>
 <title>Register</title>
 
-<style>
+<meta charset="UTF-8">
 
-/* ===== GLOBAL ===== */
+<style>
 body {
+    margin: 0;
     font-family: Arial, sans-serif;
-    background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
     height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
+    background: linear-gradient(-45deg, #0f2027, #203a43, #2c5364, #1e3a5f);
+    background-size: 400% 400%;
+    animation: bg 10s ease infinite;
 }
 
-/* ===== CARD ===== */
+@keyframes bg {
+    0% {background-position: 0% 50%;}
+    50% {background-position: 100% 50%;}
+    100% {background-position: 0% 50%;}
+}
+
 .box {
     width: 380px;
-    background: white;
-    padding: 25px;
-    border-radius: 10px;
-    box-shadow: 0 0 15px rgba(0,0,0,0.3);
-}
-
-/* ===== TITLE ===== */
-h2 {
+    background: rgba(255,255,255,0.95);
+    padding: 28px;
+    border-radius: 12px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.3);
     text-align: center;
-    margin-bottom: 15px;
+    backdrop-filter: blur(10px);
 }
 
-/* ===== INPUTS ===== */
+h2 {
+    margin-bottom: 15px;
+    color: #2c3e50;
+}
+
 input, select {
-    width: 100%;
+    width: 95%;
     margin: 8px 0;
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 6px;
+    outline: none;
 }
 
-/* ===== BUTTON ===== */
+input:focus, select:focus {
+    border-color: #2c3e50;
+}
+
 button {
     width: 100%;
     padding: 10px;
-    margin-top: 8px;
+    margin-top: 10px;
     background: #0f2027;
     color: white;
     border: none;
     border-radius: 6px;
     cursor: pointer;
     font-weight: bold;
+    transition: 0.2s;
 }
 
 button:hover {
     background: #203a43;
+    transform: scale(1.02);
 }
 
-/* ===== MESSAGE ===== */
+button:disabled {
+    background: gray;
+    cursor: not-allowed;
+}
+
 #msg {
-    text-align: center;
-    margin-top: 8px;
+    margin-top: 10px;
     font-weight: bold;
+    font-size: 14px;
 }
 
-/* ===== LINK ===== */
+.success { color: green; }
+.error { color: red; }
+
 a {
     display: block;
-    text-align: center;
-    margin-top: 10px;
+    margin-top: 12px;
     text-decoration: none;
-    color: #0f2027;
+    color: #2c3e50;
+    font-size: 14px;
 }
 
+.loader {
+    display: none;
+    margin: 10px auto;
+    border: 4px solid #eee;
+    border-top: 4px solid #2c3e50;
+    border-radius: 50%;
+    width: 25px;
+    height: 25px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg);}
+    100% { transform: rotate(360deg);}
+}
 </style>
 
 </head>
@@ -86,38 +121,68 @@ a {
 <input id="password" type="password" placeholder="Password">
 
 <select id="role">
-<option value="USER">USER</option>
-<option value="ADMIN">ADMIN</option>
+    <option value="USER">USER</option>
+    <option value="ADMIN">ADMIN</option>
 </select>
 
-<button onclick="register()">Register</button>
+<button id="btn" onclick="register()">Register</button>
+
+<div class="loader" id="loader"></div>
 
 <p id="msg"></p>
 
-<a href="login.html">Back to Login</a>
+<a href="login.html">← Back to Login</a>
 
 </div>
 
 <script>
 function register() {
 
-fetch("/auth/register", {
-method:"POST",
-headers:{ "Content-Type":"application/json" },
-body: JSON.stringify({
-    username: username.value,
-    password: password.value,
-    role: role.value
-})
-})
-.then(r=>r.json())
-.then(d=>{
-    msg.innerText = d.message || "Registered";
-})
-.catch(()=>{
-    msg.innerText = "Error";
-});
+    const btn = document.getElementById("btn");
+    const loader = document.getElementById("loader");
+    const msg = document.getElementById("msg");
 
+    msg.innerText = "";
+    msg.className = "";
+
+    btn.disabled = true;
+    loader.style.display = "block";
+
+    fetch("/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            username: document.getElementById("username").value,
+            password: document.getElementById("password").value,
+            role: document.getElementById("role").value
+        })
+    })
+    .then(async res => {
+
+        const text = await res.text(); // backend returns STRING, not JSON
+
+        if (!res.ok) {
+            throw new Error(text || "Registration failed");
+        }
+
+        return text;
+    })
+    .then(data => {
+        msg.innerText = data || "Registered Successfully!";
+        msg.classList.add("success");
+
+        setTimeout(() => {
+            window.location.href = "/login.html";
+        }, 1200);
+    })
+    .catch(err => {
+        msg.innerText = err.message;
+        msg.classList.add("error");
+    })
+    .finally(() => {
+        btn.disabled = false;
+        loader.style.display = "none";
+    });
 }
 </script>
 

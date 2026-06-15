@@ -1,0 +1,138 @@
+HELP.md
+target/
+.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+build/
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+### VS Code ###
+.vscode/
+
+### Environment Variables ###
+.env
+.env.local
+.env.*.local
+
+### OS Specific ###
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+.~*
+
+### IDE Specific ###
+*.sublime-project
+*.sublime-workspace
+.jdi
+.launch
+*.log
+
+### Maven ###
+.mvn/
+mvnw.cmd.bak
+pom.xml.bak
+
+### Gradle ###
+.gradle/
+gradle-app.setting
+!gradle-wrapper.jar
+
+### Node (if using frontend build tools) ###
+node_modules/
+npm-debug.log
+yarn-error.log
+
+### Database Files ###
+*.db
+*.sqlite
+*.h2.db
+
+### File Uploads & Temporary Files ###
+uploads/
+temp/
+tmp/
+*.tmp
+*.temp
+
+### Logs ###
+logs/
+*.log
+*.log.*
+
+### Test Coverage & Reports ###
+jacoco.exec
+coverage/
+htmlcov/
+
+### IDE-specific files ###
+*.classpath
+.project
+.pydevproject
+
+### macOS ###
+.AppleDouble
+.LSOverride
+
+### Windows ###
+.classpath
+.project
+.settings/
+bin/
+
+### Application Secrets & Config ###
+application-*.properties
+!application-*.properties.example
+secrets/
+.secrets/
+*.jks
+*.p12
+*.pkcs12
+
+### Build Output ###
+out/
+*.class
+*.jar
+*.war
+*.ear
+*.zip
+*.tar.gz
+
+### IDE Backup Files ###
+*.bak
+*.backup
+.idea/shelf/
+.idea/workspace.xml
+.idea/tasks.xml
+
+### Miscellaneous ###
+error.txt
+debug.log
+.checkstyle
+findbugs.xml
+eclipse.ini
+
