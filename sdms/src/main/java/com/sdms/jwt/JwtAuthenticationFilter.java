@@ -36,7 +36,8 @@ protected boolean shouldNotFilter(@NonNull HttpServletRequest request) {
     String path = request.getServletPath();
 
     return path.equals("/")
-            || path.startsWith("/auth/")
+        || path.equals("/auth/login")
+        || path.equals("/auth/register")
             || path.startsWith("/swagger-ui")
             || path.startsWith("/v3/api-docs")
             || path.startsWith("/actuator")
@@ -103,7 +104,7 @@ protected boolean shouldNotFilter(@NonNull HttpServletRequest request) {
         }
         // ✅ THIS PART INTEGRATES WITH STEP 13 GLOBAL HANDLER
         catch (JwtException e) {
-
+e.printStackTrace();
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             response.setContentType("application/json");
 
@@ -116,6 +117,7 @@ protected boolean shouldNotFilter(@NonNull HttpServletRequest request) {
             return;
         }
         catch (Exception e) {
+            e.printStackTrace();
 
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             response.setContentType("application/json");

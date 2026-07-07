@@ -43,7 +43,7 @@ public class SecurityConfig {
                 // ✅ PUBLIC
                 .requestMatchers(
                     "/",
-                    "register.html",
+                    "/register.html",
                     "/login.html",
                     "/dashboard.html",
                     "/user.html",
