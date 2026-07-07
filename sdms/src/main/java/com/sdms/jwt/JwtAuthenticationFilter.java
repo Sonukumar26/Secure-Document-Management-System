@@ -30,10 +30,27 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     }
 
     // ✅ Skip only login API
-    @Override
-    protected boolean shouldNotFilter(@NonNull HttpServletRequest request) {
-        return request.getServletPath().equals("/auth/login");
-    }
+   @Override
+protected boolean shouldNotFilter(@NonNull HttpServletRequest request) {
+
+    String path = request.getServletPath();
+
+    return path.equals("/")
+            || path.startsWith("/auth/")
+            || path.startsWith("/swagger-ui")
+            || path.startsWith("/v3/api-docs")
+            || path.startsWith("/actuator")
+            || path.startsWith("/css/")
+            || path.startsWith("/js/")
+            || path.startsWith("/images/")
+            || path.equals("/login.html")
+            || path.equals("/register.html")
+            || path.equals("/dashboard.html")
+            || path.equals("/user.html")
+            || path.equals("/admin.html")
+            || path.equals("/favicon.ico")
+            || path.equals("/error");
+}
 
     @Override
     protected void doFilterInternal(
