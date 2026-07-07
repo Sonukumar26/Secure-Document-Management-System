@@ -8,22 +8,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class HealthController {
 
-    // @GetMapping("/")
-    // public String health() {
-    //     return "SDMS API IS RUNNING";
-    // }
-    @RestController
-public class HomeController {
-
     @GetMapping("/")
     public Map<String, String> health() {
         return Map.of(
-            "application", "Secure Document Management System API",
-            "version", "1.0",
-            "swagger", "/swagger-ui/index.html",
-            "health", "/actuator/health"
+                "application", "Secure Document Management System API",
+                "version", "1.0",
+                "swagger", "/swagger-ui/index.html",
+                "health", "/actuator/health"
         );
     }
 }
-
-} 
